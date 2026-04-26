@@ -53,3 +53,17 @@ Place these files in `assets/`:
   - `move.wav`
 - Optional font (if present, UI text uses it):
   - `DejaVuSans.ttf` or `arial.ttf`
+
+## Output Screenshots
+
+### Board View
+![Board View](outputs/board.jpeg)
+
+### Full Game Window
+![Full Game Window](outputs/full.jpeg)
+
+### Sidebar Panel
+![Sidebar Panel](outputs/sidebar.jpeg)
+
+### Terminal Output
+![Terminal Output](outputs/terminal.jpeg)
