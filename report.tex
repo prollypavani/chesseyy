@@ -1,0 +1,290 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\onehalfspacing
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+\lstdefinestyle{cppstyle}{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{teal},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\begin{document}
+
+%--------------------------
+% Title Page
+%--------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{Chess Engine with SFML GUI}}\\[0.8cm]
+    {\Large Competitive Programming Lab Mini Project Report}\\[2cm]
+
+    \begin{tabular}{>{\bfseries}p{5cm} p{8cm}}
+        Student Name: & \underline{\hspace{8cm}} \\
+        Roll Number: & \underline{\hspace{8cm}} \\
+        Program/Semester: & \underline{\hspace{8cm}} \\
+        Course: & Competitive Programming Lab \\
+        Course Code: & 24B15CS224 \\
+        Faculty: & \underline{\hspace{8cm}} \\
+        Session: & 2025--2026 (Even Semester) \\
+        Submission Date: & \underline{\hspace{8cm}} \\
+    \end{tabular}
+
+    \vfill
+    {\large Department of Computer Science}\\
+    {\large \underline{\hspace{8cm}}}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%--------------------------
+% Summary
+%--------------------------
+\section{Summary}
+\subsection{Brief Overview of the Project}
+This project implements a desktop chess application in C++ using SFML for rendering and interaction. The system supports legal chess moves, turn-based play (human vs AI), check/checkmate/stalemate detection, and a minimax-based AI enhanced with alpha-beta pruning. It also includes benchmarking output and visual feedback features for better user experience.
+
+\subsection{Objectives}
+\begin{itemize}
+    \item Build a complete playable chess system with graphical interface.
+    \item Implement rule-based move legality and game state detection.
+    \item Integrate AI using minimax and alpha-beta pruning.
+    \item Compare minimax and alpha-beta using performance metrics.
+    \item Improve user interaction using highlights and status panels.
+\end{itemize}
+
+%--------------------------
+% Introduction
+%--------------------------
+\section{Introduction}
+\subsection{Background and Context}
+Chess is a classical two-player strategy game often used for teaching algorithmic thinking, state-space search, and optimization. This project applies core competitive programming concepts (data structures, search trees, pruning, complexity analysis) in a practical mini-project.
+
+\subsection{Problem Statement}
+Design and implement an interactive chess engine that:
+\begin{itemize}
+    \item validates player moves correctly,
+    \item plays as an intelligent AI opponent,
+    \item provides clear visual feedback and game status information.
+\end{itemize}
+
+\subsection{Project Objectives}
+\begin{itemize}
+    \item Represent board state efficiently.
+    \item Generate legal moves and enforce rules.
+    \item Evaluate and choose AI moves using minimax.
+    \item Optimize search with alpha-beta pruning.
+    \item Present game state and analytics in a clean SFML interface.
+\end{itemize}
+
+\subsection{Scope of the Project}
+Included:
+\begin{itemize}
+    \item Board rendering, piece rendering, move interaction.
+    \item Core move legality for all piece types.
+    \item Check/checkmate/stalemate detection.
+    \item Minimax + alpha-beta + benchmark output.
+    \item Move quality classification (Best/Good/Inaccuracy/Mistake/Blunder).
+\end{itemize}
+
+Not included:
+\begin{itemize}
+    \item Online multiplayer.
+    \item Opening book/endgame tablebases.
+    \item Advanced heuristics beyond current evaluation function.
+\end{itemize}
+
+%--------------------------
+% System Requirements
+%--------------------------
+\section{System Requirements}
+\subsection{Functional Requirements}
+\begin{itemize}
+    \item Open and render a chessboard window.
+    \item Load piece textures and move sound assets.
+    \item Allow piece selection and valid destination moves.
+    \item Reject invalid moves with feedback.
+    \item Alternate turns between White (player) and Black (AI).
+    \item Detect check, checkmate, and stalemate.
+    \item Compute AI moves using minimax/alpha-beta.
+    \item Display benchmark metrics: nodes explored and time.
+    \item Display move quality and game status in side panel.
+\end{itemize}
+
+%--------------------------
+% Design and Implementation
+%--------------------------
+\section{Design and Implementation}
+\subsection{UML Diagrams}
+\textbf{Class/Module-Level Design (simplified):}
+\begin{itemize}
+    \item \texttt{board.h / board.cpp}: board type, initial board, print board.
+    \item \texttt{moves.h / moves.cpp}: move legality, check detection, move generation, make/undo.
+    \item \texttt{engine.h / engine.cpp}: evaluation, minimax, alpha-beta, best move, benchmarking counters.
+    \item \texttt{main.cpp}: SFML window, input handling, rendering, side panel, integration.
+\end{itemize}
+
+\textbf{Interaction Flow:}
+\begin{enumerate}
+    \item User selects source and destination squares.
+    \item System validates move using rule engine.
+    \item If valid, move executes and quality is evaluated.
+    \item AI computes response using minimax/alpha-beta.
+    \item UI updates highlights, status, benchmark output.
+\end{enumerate}
+
+\subsection{Algorithms Implementation}
+\textbf{Implemented algorithms:}
+\begin{itemize}
+    \item Legal move generation (piece-wise move rules + king safety).
+    \item Minimax search (plain and alpha-beta variants).
+    \item Move ordering via heuristic score and \texttt{lower\_bound}.
+    \item Board evaluation based on material and positional bonuses.
+\end{itemize}
+
+\subsection{Algorithms and Their Complexities}
+\begin{longtable}{|p{5cm}|p{4cm}|p{5cm}|}
+\hline
+\textbf{Algorithm} & \textbf{Time Complexity} & \textbf{Notes} \\
+\hline
+Move generation (single position) & $O(B \times 64)$ approx. & Tries destinations for each piece, filtered by legality \\
+\hline
+Minimax (depth d) & $O(b^d)$ & $b$ = branching factor \\
+\hline
+Alpha-beta (depth d) & Best better than minimax, worst $O(b^d)$ & Prunes subtrees; practical speedup \\
+\hline
+Move ordering insertion (\texttt{lower\_bound}) & $O(\log n)$ search + $O(n)$ insert & For sorted scored move list \\
+\hline
+Check detection & $O(64 \times M)$ & Tests opponent pseudo-legal attacks on king square \\
+\hline
+\end{longtable}
+
+\subsection{Code Snippets}
+\textbf{Minimax with Alpha-Beta (excerpt):}
+\begin{lstlisting}[style=cppstyle]
+int minimax_ab(Board& board, int depth, int alpha, int beta, bool isMaximizing) {
+    ++nodesExplored;
+    if (depth == 0) return evaluateBoard(board);
+
+    vector<Move> moves = getOrderedMoves(board, isMaximizing);
+    if (moves.empty()) return evaluateBoard(board);
+
+    if (isMaximizing) {
+        int bestScore = INT_MIN;
+        for (const Move& move : moves) {
+            char captured = makeMove(board, move);
+            int score = minimax_ab(board, depth - 1, alpha, beta, false);
+            undoMove(board, move, captured);
+            bestScore = max(bestScore, score);
+            alpha = max(alpha, bestScore);
+            if (beta <= alpha) break;
+        }
+        return bestScore;
+    }
+    int bestScore = INT_MAX;
+    for (const Move& move : moves) {
+        char captured = makeMove(board, move);
+        int score = minimax_ab(board, depth - 1, alpha, beta, true);
+        undoMove(board, move, captured);
+        bestScore = min(bestScore, score);
+        beta = min(beta, bestScore);
+        if (beta <= alpha) break;
+    }
+    return bestScore;
+}
+\end{lstlisting}
+
+\textbf{Move quality classification (excerpt):}
+\begin{lstlisting}[style=cppstyle]
+int centipawnLoss = max(0, (bestMoveEval - playedMoveEval) * 10);
+string moveQuality = "Blunder";
+if (centipawnLoss <= 20) moveQuality = "Best Move";
+else if (centipawnLoss <= 50) moveQuality = "Good Move";
+else if (centipawnLoss <= 100) moveQuality = "Inaccuracy";
+else if (centipawnLoss <= 300) moveQuality = "Mistake";
+\end{lstlisting}
+
+\subsection{Output Screenshots with Description}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/gameplay_main.png}
+    \caption{Main gameplay screen with board, pieces, and highlights.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/side_panel_status.png}
+    \caption{Side panel showing game status, move quality, and evaluations.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/benchmark_output.png}
+    \caption{Console output comparing minimax and alpha-beta benchmark metrics.}
+\end{figure}
+
+\textit{Note: Replace image paths with actual screenshots saved in a \texttt{figures/} folder.}
+
+%--------------------------
+% Conclusion
+%--------------------------
+\section{Conclusion}
+\subsection{Summary \& Achievement of Objectives}
+The project successfully delivers a working SFML chess application with legal move validation, AI move generation, and rich gameplay feedback. Core objectives such as implementing minimax with alpha-beta pruning, benchmark comparison, and UI improvements were achieved.
+
+\subsection{Future Work and Recommendations}
+\begin{itemize}
+    \item Add advanced chess rules (castling, en passant, promotion logic enhancements if needed).
+    \item Improve evaluation with piece-square tables and king safety terms.
+    \item Add transposition table and iterative deepening for stronger AI.
+    \item Add PGN/FEN support for reproducible test positions.
+    \item Add automated test suite for move generation and checkmate scenarios.
+\end{itemize}
+
+%--------------------------
+% References
+%--------------------------
+\section{References}
+\begin{enumerate}
+    \item Steven Halim et al., \textit{Competitive Programming 3}, Lulu Independent Publish, 2013.
+    \item Antti Laaksonen, \textit{Guide to Competitive Programming}, Springer, 2020.
+    \item Antti Laaksonen, \textit{Competitive Programmer's Handbook}, 2017.
+    \item SFML Documentation, \url{https://www.sfml-dev.org/documentation/}
+    \item C++ Reference, \url{https://en.cppreference.com/}
+\end{enumerate}
+
+\end{document}
