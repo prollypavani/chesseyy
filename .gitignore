@@ -1,0 +1,38 @@
+# Build directories and generated files
+/build/
+/cmake-build-*/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# CMake internals (if generated in root)
+CMakeFiles/
+
+# Compiled binaries/libraries
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Dependency / debug artifacts
+*.d
+*.gch
+*.pch
+*.stackdump
+
+# Editor/IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

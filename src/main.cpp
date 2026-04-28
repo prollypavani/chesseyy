@@ -17,13 +17,32 @@ using namespace std;
 #include "engine.h"
 #include "moves.h"
 
+// --- CP Component: Array Techniques & Binary Search (Opening Book) ---
+vector<pair<string, Move>> getOpeningBook() {
+    vector<pair<string, Move>> book = {
+        {"", {6, 4, 4, 4}},                                // e4
+        {"6444:", {1, 4, 3, 4}},                           // e5
+        {"6444:1434:", {7, 6, 5, 5}},                      // Nf3
+        {"6444:1434:7655:", {0, 1, 2, 2}},                 // Nc6
+        {"6444:1434:7655:0122:", {7, 5, 4, 2}},            // Bc4 (Italian)
+        {"6444:1434:7655:0122:7542:", {0, 5, 3, 2}},       // Bc5
+        {"6333:", {1, 3, 3, 3}},                           // d4 -> d5
+    };
+    // Ensure it's sorted for binary search
+    std::sort(book.begin(), book.end(), [](const pair<string, Move>& a, const pair<string, Move>& b) {
+        return a.first < b.first;
+    });
+    return book;
+}
+
 int main() {
     constexpr int boardPixelSize = 640;
-    constexpr int sidePanelWidth = 280;
+    constexpr int sidePanelWidth = 340;
     constexpr int windowWidth = boardPixelSize + sidePanelWidth;
     constexpr int windowHeight = boardPixelSize;
     constexpr int squareSize = boardPixelSize / BOARD_SIZE;
 
+    initZobrist();
     Board board = createInitialBoard();
     printBoard(board);
 
@@ -56,12 +75,21 @@ int main() {
 
     sf::Font uiFont;
     bool hasFont = false;
-    const array<string, 3> fontCandidates = {
+    const array<string, 8> fontCandidates = {
         "assets/DejaVuSans.ttf",
         "assets/arial.ttf",
-        "/System/Library/Fonts/Supplemental/Arial.ttf"
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/liberation/LiberationSans-Regular.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "C:/Windows/Fonts/arial.ttf"
     };
     for (const string& fontPath : fontCandidates) {
+        std::error_code ec;
+        if (!filesystem::exists(fontPath, ec)) {
+            continue;
+        }
         if (uiFont.openFromFile(fontPath)) {
             hasFont = true;
             break;
@@ -70,12 +98,14 @@ int main() {
 
     sf::RenderWindow window(
         sf::VideoMode(sf::Vector2u(windowWidth, windowHeight)),
-        "SFML Chessboard"
+        "Chessey - CP Enhanced"
     );
     window.setFramerateLimit(60);
 
     bool whiteTurn = true;
     bool hasSelection = false;
+    string moveHistory = "";
+    vector<pair<string, Move>> openingBook = getOpeningBook();
     int selectedRow = -1;
     int selectedCol = -1;
     bool hasLastMove = false;
@@ -86,6 +116,11 @@ int main() {
     int lastPlayedEval = 0;
     int lastBestEval = 0;
     auto moveQualityPopupUntil = chrono::steady_clock::now();
+    
+    // CP Metrics
+    int currentMinimaxNodes = 0;
+    int currentAlphaBetaNodes = 0;
+    bool lastMoveWasBook = false;
 
     const auto printGameStateIfOver = [&](const bool sideToMoveIsWhite) {
         if (hasAnyValidMoves(board, sideToMoveIsWhite)) {
@@ -123,8 +158,10 @@ int main() {
                     continue;
                 }
 
-                const int col = static_cast<int>(mousePressed->position.x) / squareSize;
-                const int row = static_cast<int>(mousePressed->position.y) / squareSize;
+                const sf::Vector2i clickPixels = sf::Mouse::getPosition(window);
+                const sf::Vector2f clickWorld = window.mapPixelToCoords(clickPixels);
+                const int col = static_cast<int>(clickWorld.x) / squareSize;
+                const int row = static_cast<int>(clickWorld.y) / squareSize;
                 if (!isInsideBoard(row, col)) {
                     continue;
                 }
@@ -173,6 +210,12 @@ int main() {
                     moveSound.play();
 
                     cout << "Move: (" << selectedRow << ", " << selectedCol << ") -> (" << row << ", " << col << ")\n";
+                    moveHistory += to_string(selectedRow) + to_string(selectedCol) + to_string(row) + to_string(col) + ":";
+                    
+                    // --- CP Trigger: TopoSort SEE
+                    if (boardBeforeMove[row][col] != '.') {
+                        printSEETopoSort(boardBeforeMove, row, col);
+                    }
 
                     constexpr int qualityDepth = 3;
                     const auto evaluateAfterWhiteMove = [&](Board& positionAfterWhiteMove) {
@@ -235,34 +278,57 @@ int main() {
                     if (!whiteTurn) {
                         const vector<Move> blackMoves = getAllValidMoves(board, false);
                         if (!blackMoves.empty()) {
-                            nodesExplored = 0;
-                            useAlphaBeta = false;
-                            const auto startMinimax = chrono::high_resolution_clock::now();
-                            const Move plainMove = getBestMove(board, 3);
-                            (void)plainMove;
-                            const auto endMinimax = chrono::high_resolution_clock::now();
-                            const auto minimaxDuration = chrono::duration_cast<chrono::milliseconds>(endMinimax - startMinimax);
-                            const int nodesMinimax = nodesExplored;
+                            Move aiMove{0,0,0,0};
+                            bool bookMoveFound = false;
 
-                            nodesExplored = 0;
-                            useAlphaBeta = true;
-                            const auto startAlphaBeta = chrono::high_resolution_clock::now();
-                            const Move aiMove = getBestMove(board, 3);
-                            const auto endAlphaBeta = chrono::high_resolution_clock::now();
-                            const auto alphaBetaDuration = chrono::duration_cast<chrono::milliseconds>(endAlphaBeta - startAlphaBeta);
-                            const int nodesAlphaBeta = nodesExplored;
+                            // Binary Search for Opening Book Move
+                            auto bookIt = std::lower_bound(openingBook.begin(), openingBook.end(), moveHistory,
+                                [](const pair<string, Move>& entry, const string& history) {
+                                    return entry.first < history;
+                                });
 
+                            if (bookIt != openingBook.end() && bookIt->first == moveHistory) {
+                                aiMove = bookIt->second;
+                                bookMoveFound = true;
+                                lastMoveWasBook = true;
+                                cout << "\n--- AI Move from Opening Book (Binary Search) ---\n";
+                            }
+
+                            if (!bookMoveFound) {
+                                lastMoveWasBook = false;
+                                nodesExplored = 0;
+                                useAlphaBeta = false;
+                                const auto startMinimax = chrono::high_resolution_clock::now();
+                                const Move plainMove = getBestMove(board, 3);
+                                (void)plainMove;
+                                const auto endMinimax = chrono::high_resolution_clock::now();
+                                const auto minimaxDuration = chrono::duration_cast<chrono::milliseconds>(endMinimax - startMinimax);
+                                const int nodesMinimax = nodesExplored;
+
+                                nodesExplored = 0;
+                                useAlphaBeta = true;
+                                const auto startAlphaBeta = chrono::high_resolution_clock::now();
+                                aiMove = getBestMove(board, 3);
+                                const auto endAlphaBeta = chrono::high_resolution_clock::now();
+                                const auto alphaBetaDuration = chrono::duration_cast<chrono::milliseconds>(endAlphaBeta - startAlphaBeta);
+                                const int nodesAlphaBeta = nodesExplored;
+                                
+                                currentMinimaxNodes = nodesMinimax;
+                                currentAlphaBetaNodes = nodesAlphaBeta;
+                                
+                                cout << "\n--- Benchmark ---\n";
+                                cout << "Minimax: Nodes = " << nodesMinimax << ", Time = " << minimaxDuration.count() << " ms\n";
+                                cout << "Alpha-Beta: Nodes = " << nodesAlphaBeta << ", Time = " << alphaBetaDuration.count() << " ms\n";
+                                cout << "Transposition Table (Zobrist) Hits: " << ttHits << "\n";
+                            }
+                            
+                            moveHistory += to_string(aiMove.fromRow) + to_string(aiMove.fromCol) + to_string(aiMove.toRow) + to_string(aiMove.toCol) + ":";
                             makeMove(board, aiMove);
                             hasLastMove = true;
                             lastMove = aiMove;
                             moveSound.play();
                             cout << "AI Move: (" << aiMove.fromRow << ", " << aiMove.fromCol
                                       << ") -> (" << aiMove.toRow << ", " << aiMove.toCol << ")\n";
-                            cout << "\n--- Benchmark ---\n";
-                            cout << "Minimax: Nodes = " << nodesMinimax
-                                      << ", Time = " << minimaxDuration.count() << " ms\n";
-                            cout << "Alpha-Beta: Nodes = " << nodesAlphaBeta
-                                      << ", Time = " << alphaBetaDuration.count() << " ms\n";
                         }
                         whiteTurn = true;
                         gameStatusText = "White to move";
@@ -285,11 +351,12 @@ int main() {
         const sf::Color checkColor(255, 0, 0, 100);
         const sf::Color hoverColor(255, 255, 255, 45);
 
-        const sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
-        const int hoverCol = mousePosition.x / squareSize;
-        const int hoverRow = mousePosition.y / squareSize;
-        const bool hasHover = mousePosition.x >= 0 && mousePosition.x < boardPixelSize &&
-                              mousePosition.y >= 0 && mousePosition.y < boardPixelSize &&
+        const sf::Vector2i mousePixels = sf::Mouse::getPosition(window);
+        const sf::Vector2f mouseWorld = window.mapPixelToCoords(mousePixels);
+        const int hoverCol = static_cast<int>(mouseWorld.x) / squareSize;
+        const int hoverRow = static_cast<int>(mouseWorld.y) / squareSize;
+        const bool hasHover = mouseWorld.x >= 0.0f && mouseWorld.x < static_cast<float>(boardPixelSize) &&
+                              mouseWorld.y >= 0.0f && mouseWorld.y < static_cast<float>(boardPixelSize) &&
                               isInsideBoard(hoverRow, hoverCol);
 
         const bool whiteInCheck = isKingInCheck(board, true);
@@ -347,11 +414,7 @@ int main() {
                     highlight.setFillColor(selectedColor);
                     highlight.setPosition(cellPosition);
                     window.draw(highlight);
-                } else if (hasSelection && isValidMove(board, selectedRow, selectedCol, row, col)) {
-                    highlight.setFillColor(validMoveColor);
-                    highlight.setPosition(cellPosition);
-                    window.draw(highlight);
-                }
+                } 
 
                 const bool isWhiteKingInCheckSquare = whiteInCheck && row == whiteKingRow && col == whiteKingCol;
                 const bool isBlackKingInCheckSquare = blackInCheck && row == blackKingRow && col == blackKingCol;
@@ -381,6 +444,67 @@ int main() {
                 }
                 sprite.setPosition(sf::Vector2f(static_cast<float>(col * squareSize), static_cast<float>(row * squareSize)));
                 window.draw(sprite);
+                
+                // Draw Valid Move Dots over pieces (like modern chess UIs)
+                if (hasSelection && isValidMove(board, selectedRow, selectedCol, row, col)) {
+                    sf::CircleShape validDot(squareSize / 6.0f);
+                    if (board[row][col] == '.') {
+                        validDot.setFillColor(sf::Color(0, 0, 0, 40));
+                        validDot.setPosition(sf::Vector2f((col + 0.5f) * squareSize - squareSize / 6.0f, (row + 0.5f) * squareSize - squareSize / 6.0f));
+                    } else {
+                        validDot.setFillColor(sf::Color(0, 0, 0, 0));
+                        validDot.setOutlineColor(sf::Color(0, 0, 0, 50));
+                        validDot.setOutlineThickness(7.0f);
+                        validDot.setRadius(squareSize / 2.3f);
+                        validDot.setPosition(sf::Vector2f((col + 0.5f) * squareSize - squareSize / 2.3f, (row + 0.5f) * squareSize - squareSize / 2.3f));
+                    }
+                    window.draw(validDot);
+                }
+                
+                // Draw Passed Pawn Glowing Ring (Prefix Array Output)
+                for (const auto& pawn : passedPawnsGlobal) {
+                    if (pawn.first == row && pawn.second == col) {
+                        sf::CircleShape glow(squareSize / 2.2f);
+                        glow.setFillColor(sf::Color::Transparent);
+                        glow.setOutlineColor(sf::Color(50, 255, 50, 150));
+                        glow.setOutlineThickness(3.0f);
+                        glow.setPosition(sf::Vector2f((col + 0.5f) * squareSize - squareSize / 2.2f, (row + 0.5f) * squareSize - squareSize / 2.2f));
+                        window.draw(glow);
+                    }
+                }
+            }
+        }
+        
+        // --- CP Component: Draw DSU Defensive Groups
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            computeDefensiveComponents(board);
+            for (int r = 0; r < BOARD_SIZE; ++r) {
+                for (int c = 0; c < BOARD_SIZE; ++c) {
+                    if (board[r][c] != '.') {
+                        int root = findDSU(r * 8 + c);
+                        if (dsuSize[root] > 1) {
+                            // Draw DSU Network Lines
+                            for (int i = 0; i < 64; ++i) {
+                                if (i > r * 8 + c && board[i/8][i%8] != '.' && findDSU(i) == root) {
+                                    sf::Vertex line[2];
+                                    line[0].position = sf::Vector2f((c + 0.5f) * squareSize, (r + 0.5f) * squareSize);
+                                    line[1].position = sf::Vector2f((i%8 + 0.5f) * squareSize, (i/8 + 0.5f) * squareSize);
+                                    int hashColor = (root * 137) % 360;
+                                    sf::Color lineColor(50 + hashColor % 150, 100 + hashColor % 155, 200, 150);
+                                    line[0].color = lineColor;
+                                    line[1].color = lineColor;
+                                    window.draw(line, 2, sf::PrimitiveType::Lines);
+                                }
+                            }
+                            // Draw Node Dot
+                            sf::CircleShape dsuDot(squareSize / 8.0f);
+                            dsuDot.setPosition(sf::Vector2f((c + 0.5f) * squareSize - squareSize / 8.0f, (r + 0.5f) * squareSize - squareSize / 8.0f));
+                            int hashColor = (root * 137) % 360;
+                            dsuDot.setFillColor(sf::Color(50 + hashColor % 150, 100 + hashColor % 155, 200, 255));
+                            window.draw(dsuDot);
+                        }
+                    }
+                }
             }
         }
 
@@ -400,19 +524,46 @@ int main() {
 
             drawPanelText("Game Status", panelX + 16.0f, 16.0f, 22, sf::Color(240, 240, 240));
             drawPanelText(gameStatusText, panelX + 16.0f, 48.0f, 18, sf::Color(220, 220, 220));
+            
+            drawPanelText(string("Hold 'D' for DSU Net"), panelX + 16.0f, 85.0f, 15, sf::Color(150, 200, 255));
+            drawPanelText(string("Green rings = Passed Pawns"), panelX + 16.0f, 105.0f, 15, sf::Color(150, 255, 150));
 
-            drawPanelText("Move Quality", panelX + 16.0f, 96.0f, 20, sf::Color(240, 240, 240));
-            drawPanelText(lastMoveQualityText, panelX + 16.0f, 126.0f, 18, sf::Color(230, 230, 140));
+            // CP Analytics Panel
+            drawPanelText("CP Analytics", panelX + 16.0f, 140.0f, 20, sf::Color(255, 215, 0));
+            
+            sf::RectangleShape separator(sf::Vector2f(sidePanelWidth - 32.0f, 2.0f));
+            separator.setPosition(sf::Vector2f(panelX + 16.0f, 170.0f));
+            separator.setFillColor(sf::Color(100, 100, 100));
+            window.draw(separator);
+
+            drawPanelText(string("Zobrist TT Hits: ") + to_string(ttHits), panelX + 16.0f, 180.0f, 16, sf::Color(200, 200, 200));
+            
+            string bookText = lastMoveWasBook ? "Active (Binary Search)" : "Miss (Calculated)";
+            drawPanelText(string("Opening Book: ") + bookText, panelX + 16.0f, 210.0f, 16, 
+                lastMoveWasBook ? sf::Color(100, 255, 100) : sf::Color(200, 150, 150));
+
+            drawPanelText("Nodes Evaluated: ", panelX + 16.0f, 240.0f, 16, sf::Color(200, 200, 200));
+            drawPanelText(string("Minimax: ") + to_string(currentMinimaxNodes), panelX + 26.0f, 260.0f, 14, sf::Color(180, 180, 180));
+            drawPanelText(string("Alpha-Beta: ") + to_string(currentAlphaBetaNodes), panelX + 26.0f, 280.0f, 14, sf::Color(180, 255, 180));
+            
+            if (currentMinimaxNodes > 0) {
+                int saved = currentMinimaxNodes - currentAlphaBetaNodes;
+                int percent = (saved * 100) / max(1, currentMinimaxNodes);
+                drawPanelText(string("Ordering Saved: ") + to_string(percent) + "%", panelX + 26.0f, 300.0f, 14, sf::Color(255, 200, 100));
+            }
+
+            drawPanelText("Move Quality", panelX + 16.0f, 350.0f, 20, sf::Color(240, 240, 240));
+            drawPanelText(lastMoveQualityText, panelX + 16.0f, 380.0f, 18, sf::Color(230, 230, 140));
 
             drawPanelText(
                 "Engine Eval: " + string(lastPlayedEval >= 0 ? "+" : "") +
                 to_string(static_cast<double>(lastPlayedEval) / 10.0),
-                panelX + 16.0f, 166.0f, 17, sf::Color(220, 220, 220)
+                panelX + 16.0f, 420.0f, 17, sf::Color(220, 220, 220)
             );
             drawPanelText(
                 "Best Eval: " + string(lastBestEval >= 0 ? "+" : "") +
                 to_string(static_cast<double>(lastBestEval) / 10.0),
-                panelX + 16.0f, 192.0f, 17, sf::Color(220, 220, 220)
+                panelX + 16.0f, 446.0f, 17, sf::Color(220, 220, 220)
             );
 
             const bool showMoveQualityPopup = chrono::steady_clock::now() < moveQualityPopupUntil;

@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/pavani/Documents/chesseycpp
+CMAKE_SOURCE_DIR = /home/rudnibh/Projects/chesseyy
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/pavani/Documents/chesseycpp/build
+CMAKE_BINARY_DIR = /home/rudnibh/Projects/chesseyy/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/chesseycpp.dir/depend.make
@@ -73,60 +73,60 @@ CMakeFiles/chesseycpp.dir/codegen:
 .PHONY : CMakeFiles/chesseycpp.dir/codegen
 
 CMakeFiles/chesseycpp.dir/src/main.cpp.o: CMakeFiles/chesseycpp.dir/flags.make
-CMakeFiles/chesseycpp.dir/src/main.cpp.o: /Users/pavani/Documents/chesseycpp/src/main.cpp
+CMakeFiles/chesseycpp.dir/src/main.cpp.o: /home/rudnibh/Projects/chesseyy/src/main.cpp
 CMakeFiles/chesseycpp.dir/src/main.cpp.o: CMakeFiles/chesseycpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/pavani/Documents/chesseycpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/chesseycpp.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/main.cpp.o -MF CMakeFiles/chesseycpp.dir/src/main.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/main.cpp.o -c /Users/pavani/Documents/chesseycpp/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/rudnibh/Projects/chesseyy/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/chesseycpp.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/main.cpp.o -MF CMakeFiles/chesseycpp.dir/src/main.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/main.cpp.o -c /home/rudnibh/Projects/chesseyy/src/main.cpp
 
 CMakeFiles/chesseycpp.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/chesseycpp.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/pavani/Documents/chesseycpp/src/main.cpp > CMakeFiles/chesseycpp.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/rudnibh/Projects/chesseyy/src/main.cpp > CMakeFiles/chesseycpp.dir/src/main.cpp.i
 
 CMakeFiles/chesseycpp.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/chesseycpp.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pavani/Documents/chesseycpp/src/main.cpp -o CMakeFiles/chesseycpp.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/rudnibh/Projects/chesseyy/src/main.cpp -o CMakeFiles/chesseycpp.dir/src/main.cpp.s
 
 CMakeFiles/chesseycpp.dir/src/board.cpp.o: CMakeFiles/chesseycpp.dir/flags.make
-CMakeFiles/chesseycpp.dir/src/board.cpp.o: /Users/pavani/Documents/chesseycpp/src/board.cpp
+CMakeFiles/chesseycpp.dir/src/board.cpp.o: /home/rudnibh/Projects/chesseyy/src/board.cpp
 CMakeFiles/chesseycpp.dir/src/board.cpp.o: CMakeFiles/chesseycpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/pavani/Documents/chesseycpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/chesseycpp.dir/src/board.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/board.cpp.o -MF CMakeFiles/chesseycpp.dir/src/board.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/board.cpp.o -c /Users/pavani/Documents/chesseycpp/src/board.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/rudnibh/Projects/chesseyy/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/chesseycpp.dir/src/board.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/board.cpp.o -MF CMakeFiles/chesseycpp.dir/src/board.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/board.cpp.o -c /home/rudnibh/Projects/chesseyy/src/board.cpp
 
 CMakeFiles/chesseycpp.dir/src/board.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/chesseycpp.dir/src/board.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/pavani/Documents/chesseycpp/src/board.cpp > CMakeFiles/chesseycpp.dir/src/board.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/rudnibh/Projects/chesseyy/src/board.cpp > CMakeFiles/chesseycpp.dir/src/board.cpp.i
 
 CMakeFiles/chesseycpp.dir/src/board.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/chesseycpp.dir/src/board.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pavani/Documents/chesseycpp/src/board.cpp -o CMakeFiles/chesseycpp.dir/src/board.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/rudnibh/Projects/chesseyy/src/board.cpp -o CMakeFiles/chesseycpp.dir/src/board.cpp.s
 
 CMakeFiles/chesseycpp.dir/src/moves.cpp.o: CMakeFiles/chesseycpp.dir/flags.make
-CMakeFiles/chesseycpp.dir/src/moves.cpp.o: /Users/pavani/Documents/chesseycpp/src/moves.cpp
+CMakeFiles/chesseycpp.dir/src/moves.cpp.o: /home/rudnibh/Projects/chesseyy/src/moves.cpp
 CMakeFiles/chesseycpp.dir/src/moves.cpp.o: CMakeFiles/chesseycpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/pavani/Documents/chesseycpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/chesseycpp.dir/src/moves.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/moves.cpp.o -MF CMakeFiles/chesseycpp.dir/src/moves.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/moves.cpp.o -c /Users/pavani/Documents/chesseycpp/src/moves.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/rudnibh/Projects/chesseyy/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/chesseycpp.dir/src/moves.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/moves.cpp.o -MF CMakeFiles/chesseycpp.dir/src/moves.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/moves.cpp.o -c /home/rudnibh/Projects/chesseyy/src/moves.cpp
 
 CMakeFiles/chesseycpp.dir/src/moves.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/chesseycpp.dir/src/moves.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/pavani/Documents/chesseycpp/src/moves.cpp > CMakeFiles/chesseycpp.dir/src/moves.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/rudnibh/Projects/chesseyy/src/moves.cpp > CMakeFiles/chesseycpp.dir/src/moves.cpp.i
 
 CMakeFiles/chesseycpp.dir/src/moves.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/chesseycpp.dir/src/moves.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pavani/Documents/chesseycpp/src/moves.cpp -o CMakeFiles/chesseycpp.dir/src/moves.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/rudnibh/Projects/chesseyy/src/moves.cpp -o CMakeFiles/chesseycpp.dir/src/moves.cpp.s
 
 CMakeFiles/chesseycpp.dir/src/engine.cpp.o: CMakeFiles/chesseycpp.dir/flags.make
-CMakeFiles/chesseycpp.dir/src/engine.cpp.o: /Users/pavani/Documents/chesseycpp/src/engine.cpp
+CMakeFiles/chesseycpp.dir/src/engine.cpp.o: /home/rudnibh/Projects/chesseyy/src/engine.cpp
 CMakeFiles/chesseycpp.dir/src/engine.cpp.o: CMakeFiles/chesseycpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/pavani/Documents/chesseycpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/chesseycpp.dir/src/engine.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/engine.cpp.o -MF CMakeFiles/chesseycpp.dir/src/engine.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/engine.cpp.o -c /Users/pavani/Documents/chesseycpp/src/engine.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/rudnibh/Projects/chesseyy/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/chesseycpp.dir/src/engine.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/chesseycpp.dir/src/engine.cpp.o -MF CMakeFiles/chesseycpp.dir/src/engine.cpp.o.d -o CMakeFiles/chesseycpp.dir/src/engine.cpp.o -c /home/rudnibh/Projects/chesseyy/src/engine.cpp
 
 CMakeFiles/chesseycpp.dir/src/engine.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/chesseycpp.dir/src/engine.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/pavani/Documents/chesseycpp/src/engine.cpp > CMakeFiles/chesseycpp.dir/src/engine.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/rudnibh/Projects/chesseyy/src/engine.cpp > CMakeFiles/chesseycpp.dir/src/engine.cpp.i
 
 CMakeFiles/chesseycpp.dir/src/engine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/chesseycpp.dir/src/engine.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pavani/Documents/chesseycpp/src/engine.cpp -o CMakeFiles/chesseycpp.dir/src/engine.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/rudnibh/Projects/chesseyy/src/engine.cpp -o CMakeFiles/chesseycpp.dir/src/engine.cpp.s
 
 # Object files for target chesseycpp
 chesseycpp_OBJECTS = \
@@ -143,12 +143,13 @@ chesseycpp: CMakeFiles/chesseycpp.dir/src/board.cpp.o
 chesseycpp: CMakeFiles/chesseycpp.dir/src/moves.cpp.o
 chesseycpp: CMakeFiles/chesseycpp.dir/src/engine.cpp.o
 chesseycpp: CMakeFiles/chesseycpp.dir/build.make
-chesseycpp: /opt/homebrew/lib/libsfml-graphics.3.0.2.dylib
-chesseycpp: /opt/homebrew/lib/libsfml-window.3.0.2.dylib
-chesseycpp: /opt/homebrew/lib/libsfml-audio.3.0.2.dylib
-chesseycpp: /opt/homebrew/lib/libsfml-system.3.0.2.dylib
+chesseycpp: CMakeFiles/chesseycpp.dir/compiler_depend.ts
+chesseycpp: /usr/lib/libsfml-graphics.so.3.0.2
+chesseycpp: /usr/lib/libsfml-window.so.3.0.2
+chesseycpp: /usr/lib/libsfml-audio.so.3.0.2
+chesseycpp: /usr/lib/libsfml-system.so.3.0.2
 chesseycpp: CMakeFiles/chesseycpp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/pavani/Documents/chesseycpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable chesseycpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/rudnibh/Projects/chesseyy/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable chesseycpp"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/chesseycpp.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -160,6 +161,6 @@ CMakeFiles/chesseycpp.dir/clean:
 .PHONY : CMakeFiles/chesseycpp.dir/clean
 
 CMakeFiles/chesseycpp.dir/depend:
-	cd /Users/pavani/Documents/chesseycpp/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/pavani/Documents/chesseycpp /Users/pavani/Documents/chesseycpp /Users/pavani/Documents/chesseycpp/build /Users/pavani/Documents/chesseycpp/build /Users/pavani/Documents/chesseycpp/build/CMakeFiles/chesseycpp.dir/DependInfo.cmake "--color=$(COLOR)" chesseycpp
+	cd /home/rudnibh/Projects/chesseyy/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/rudnibh/Projects/chesseyy /home/rudnibh/Projects/chesseyy /home/rudnibh/Projects/chesseyy/build /home/rudnibh/Projects/chesseyy/build /home/rudnibh/Projects/chesseyy/build/CMakeFiles/chesseycpp.dir/DependInfo.cmake "--color=$(COLOR)" chesseycpp
 .PHONY : CMakeFiles/chesseycpp.dir/depend
 

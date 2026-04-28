@@ -119,13 +119,14 @@ Included:
     \item Check/checkmate/stalemate detection.
     \item Minimax + alpha-beta + benchmark output.
     \item Move quality classification (Best/Good/Inaccuracy/Mistake/Blunder).
+    \item Integration of Competitive Programming concepts (DSU, Topological Sort, Prefix Sums, Binary Search, Zobrist Hashing).
 \end{itemize}
 
 Not included:
 \begin{itemize}
     \item Online multiplayer.
-    \item Opening book/endgame tablebases.
-    \item Advanced heuristics beyond current evaluation function.
+    \item Endgame tablebases.
+    \item Advanced rules like En Passant and Castling.
 \end{itemize}
 
 %--------------------------
@@ -168,28 +169,33 @@ Not included:
 \end{enumerate}
 
 \subsection{Algorithms Implementation}
-\textbf{Implemented algorithms:}
+\textbf{General algorithms and Competitive Programming integrations:}
 \begin{itemize}
-    \item Legal move generation (piece-wise move rules + king safety).
-    \item Minimax search (plain and alpha-beta variants).
-    \item Move ordering via heuristic score and \texttt{lower\_bound}.
-    \item Board evaluation based on material and positional bonuses.
+    \item \textbf{Minimax \& Alpha-Beta Pruning}: Evaluates optimal game tree trajectories recursively.
+    \item \textbf{Zobrist Hashing (Bit Manipulation)}: Utilizes XOR operations to safely hash unique board positions into an \texttt{unordered\_map} Transposition Table.
+    \item \textbf{Prefix Arrays}: Computes pawn chains dynamically using range sum queries to isolate passed pawns efficiently.
+    \item \textbf{Disjoint Set Union (DSU)}: Calculates defensive groups of mutually protecting friendlies and draws network clusters in the UI.
+    \item \textbf{Topological Sort}: Used inside Static Exchange Evaluation (SEE) to define an acyclic capture precedence graph on highly contoured squares.
+    \item \textbf{Binary Search (Opening Book)}: Uses \texttt{std::lower\_bound} on sorted variation arrays to fetch optimal first responses immediately.
+    \item \textbf{Move Ordering (STL Custom Comparators)}: Enhances node evaluation speed by presorting captures via MVV-LVA logic using \texttt{std::sort}.
 \end{itemize}
 
 \subsection{Algorithms and Their Complexities}
-\begin{longtable}{|p{5cm}|p{4cm}|p{5cm}|}
+\begin{longtable}{|p{4cm}|p{3.5cm}|p{6cm}|}
 \hline
 \textbf{Algorithm} & \textbf{Time Complexity} & \textbf{Notes} \\
 \hline
-Move generation (single position) & $O(B \times 64)$ approx. & Tries destinations for each piece, filtered by legality \\
+Minimax with Alpha-Beta & $O(b^{d/2})$ (best) & Highly optimized by move ordering and Zobrist hashing \\
 \hline
-Minimax (depth d) & $O(b^d)$ & $b$ = branching factor \\
+Zobrist Hash Update & $O(1)$ & Instant state updates using XOR \\
 \hline
-Alpha-beta (depth d) & Best better than minimax, worst $O(b^d)$ & Prunes subtrees; practical speedup \\
+Prefix Array Pawn Eval & $O(1)$ per query & Precomputed in $O(Board)$; instantly checks neighboring files \\
 \hline
-Move ordering insertion (\texttt{lower\_bound}) & $O(\log n)$ search + $O(n)$ insert & For sorted scored move list \\
+Topological Sort (SEE) & $O(V + E)$ & Resolves capture contingencies acyclically \\
 \hline
-Check detection & $O(64 \times M)$ & Tests opponent pseudo-legal attacks on king square \\
+DSU Component Grouping & $O(\alpha(n))$ & Groups defensively mutually connected pieces \\
+\hline
+Binary Search (Book) & $O(\log n)$ & Quickly searches large sorted history arrays directly \\
 \hline
 \end{longtable}
 
@@ -268,11 +274,10 @@ The project successfully delivers a working SFML chess application with legal mo
 
 \subsection{Future Work and Recommendations}
 \begin{itemize}
+    \item Implement Lowest Common Ancestor (binary lifting) to compare and track divergences in game PV trees.
+    \item Substitute \texttt{std::unordered\_map} for a highly-customized manual Hash Table initialized via the Sieve of Eratosthenes. 
     \item Add advanced chess rules (castling, en passant, promotion logic enhancements if needed).
-    \item Improve evaluation with piece-square tables and king safety terms.
-    \item Add transposition table and iterative deepening for stronger AI.
     \item Add PGN/FEN support for reproducible test positions.
-    \item Add automated test suite for move generation and checkmate scenarios.
 \end{itemize}
 
 %--------------------------

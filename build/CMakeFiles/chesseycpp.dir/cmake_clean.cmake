@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/chesseycpp.dir/link.d"
   "CMakeFiles/chesseycpp.dir/src/board.cpp.o"
   "CMakeFiles/chesseycpp.dir/src/board.cpp.o.d"
   "CMakeFiles/chesseycpp.dir/src/engine.cpp.o"

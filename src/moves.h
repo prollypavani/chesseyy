@@ -21,3 +21,7 @@ vector<Move> getAllValidMoves(Board& board, bool isWhiteTurnForMoves);
 bool hasAnyValidMoves(Board& board, bool isWhite);
 char makeMove(Board& board, const Move& move);
 void undoMove(Board& board, const Move& move, char capturedPiece);
+
+extern int dsuSize[64];
+void computeDefensiveComponents(const Board& board);
+int findDSU(int x);

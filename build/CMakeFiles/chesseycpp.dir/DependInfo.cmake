@@ -8,10 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/pavani/Documents/chesseycpp/src/board.cpp" "CMakeFiles/chesseycpp.dir/src/board.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/board.cpp.o.d"
-  "/Users/pavani/Documents/chesseycpp/src/engine.cpp" "CMakeFiles/chesseycpp.dir/src/engine.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/engine.cpp.o.d"
-  "/Users/pavani/Documents/chesseycpp/src/main.cpp" "CMakeFiles/chesseycpp.dir/src/main.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/main.cpp.o.d"
-  "/Users/pavani/Documents/chesseycpp/src/moves.cpp" "CMakeFiles/chesseycpp.dir/src/moves.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/moves.cpp.o.d"
+  "/home/rudnibh/Projects/chesseyy/src/board.cpp" "CMakeFiles/chesseycpp.dir/src/board.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/board.cpp.o.d"
+  "/home/rudnibh/Projects/chesseyy/src/engine.cpp" "CMakeFiles/chesseycpp.dir/src/engine.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/engine.cpp.o.d"
+  "/home/rudnibh/Projects/chesseyy/src/main.cpp" "CMakeFiles/chesseycpp.dir/src/main.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/main.cpp.o.d"
+  "/home/rudnibh/Projects/chesseyy/src/moves.cpp" "CMakeFiles/chesseycpp.dir/src/moves.cpp.o" "gcc" "CMakeFiles/chesseycpp.dir/src/moves.cpp.o.d"
+  "" "chesseycpp" "gcc" "CMakeFiles/chesseycpp.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

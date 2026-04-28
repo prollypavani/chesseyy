@@ -213,3 +213,57 @@ void undoMove(Board& board, const Move& move, const char capturedPiece) {
     board[move.fromRow][move.fromCol] = board[move.toRow][move.toCol];
     board[move.toRow][move.toCol] = capturedPiece;
 }
+
+// --- CP Component: Graphs and Trees (Disjoint Set Union - DSU) ---
+int dsuParent[64];
+int dsuSize[64] = {0};
+
+void initDSU() {
+    for (int i = 0; i < 64; ++i) {
+        dsuParent[i] = i;
+        dsuSize[i] = 1;
+    }
+}
+
+int findDSU(int x) {
+    if (dsuParent[x] == x) return x;
+    return dsuParent[x] = findDSU(dsuParent[x]);
+}
+
+void unionDSU(int x, int y) {
+    int rootX = findDSU(x);
+    int rootY = findDSU(y);
+    if (rootX != rootY) {
+        if (dsuSize[rootX] < dsuSize[rootY]) swap(rootX, rootY);
+        dsuParent[rootY] = rootX;
+        dsuSize[rootX] += dsuSize[rootY];
+    }
+}
+
+void computeDefensiveComponents(const Board& board) {
+    initDSU();
+    for (int fromRow = 0; fromRow < BOARD_SIZE; ++fromRow) {
+        for (int fromCol = 0; fromCol < BOARD_SIZE; ++fromCol) {
+            char piece = board[fromRow][fromCol];
+            if (piece == '.') continue;
+            
+            bool isWhite = isupper(static_cast<unsigned char>(piece)) != 0;
+            for (int toRow = 0; toRow < BOARD_SIZE; ++toRow) {
+                for (int toCol = 0; toCol < BOARD_SIZE; ++toCol) {
+                    if (fromRow == toRow && fromCol == toCol) continue;
+                    char targetPiece = board[toRow][toCol];
+                    if (targetPiece == '.') continue;
+                    
+                    bool targetIsWhite = isupper(static_cast<unsigned char>(targetPiece)) != 0;
+                    if (isWhite == targetIsWhite) {
+                        Board tempBoard = board;
+                        tempBoard[toRow][toCol] = isWhite ? 'p' : 'P'; // Treat friendly piece as enemy temporarily to check pseudo-legal attack
+                        if (isPseudoLegalMove(tempBoard, fromRow, fromCol, toRow, toCol)) {
+                            unionDSU(fromRow * 8 + fromCol, toRow * 8 + toCol);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
